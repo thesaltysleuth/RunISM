@@ -41,3 +41,27 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: clouds
+    uniqueID: 2705437505
+    locked: 0
+  - name: Hill2
+    uniqueID: 1660490449
+    locked: 0
+  - name: Hill1
+    uniqueID: 2086550251
+    locked: 0
+  - name: parallax bushes
+    uniqueID: 863381817
+    locked: 0
+  - name: distant trees
+    uniqueID: 2431685163
+    locked: 0
+  - name: buildings
+    uniqueID: 81034957
+    locked: 0
+  - name: trees
+    uniqueID: 2327422081
+    locked: 0
+  - name: ground
+    uniqueID: 2995183485
+    locked: 0
