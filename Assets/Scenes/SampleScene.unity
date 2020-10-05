@@ -1384,7 +1384,7 @@ GameObject:
   - component: {fileID: 525548280}
   - component: {fileID: 525548279}
   - component: {fileID: 525548278}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4137,7 +4137,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1.25
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -4155,6 +4155,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3b8356f92c80b948941f2eb814b5fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ground:
+    serializedVersion: 2
+    m_Bits: 256
+  speed: 7
+  jumpForce: 15
 --- !u!95 &2139281251
 Animator:
   serializedVersion: 3
