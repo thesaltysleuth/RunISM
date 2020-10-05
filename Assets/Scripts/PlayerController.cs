@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,7 +10,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private Collider2D coll;
-    public int cherries = 0;
 
     //FSM
     private enum State { idle, running, jumping, falling };
@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask ground;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private int cherries = 0;
+    [SerializeField] private Text cherryText;
 
 
 
@@ -35,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
         Movement();
         AnimationState();
-        anim.SetInteger("state", (int)state);
+        anim.SetInteger("state", (int)state); //sets animation based on Enumerator state
 
     }
 
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(collision.gameObject); //Cherry destroy
             cherries += 1;
+            cherryText.text = cherries.ToString();
         }
     }
 
@@ -52,19 +55,21 @@ public class PlayerController : MonoBehaviour
     {
         float hDirection = Input.GetAxis("Horizontal");
 
+        //Moving left
         if (hDirection < 0)
         {
             rb.velocity = new Vector2(-speed, rb.velocity.y);
             transform.localScale = new Vector2(-1, 1);
         }
 
+        //Moving right
         else if (hDirection > 0)
         {
             rb.velocity = new Vector2(speed, rb.velocity.y);
             transform.localScale = new Vector2(1, 1);
         }
 
-
+        //Jumping
         if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
