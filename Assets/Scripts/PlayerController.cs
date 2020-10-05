@@ -1,21 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class PlayerController : MonoBehaviour
 {
-    //Start() variables
     private Rigidbody2D rb;
     private Animator anim;
-    private Collider2D coll;
-
-    //FSM
-    private enum State { idle, running, jumping, falling }
+    private enum State { idle, running, jumping, falling };
     private State state = State.idle;
-
-    //Inspector variables
+    private Collider2D coll;
     [SerializeField] private LayerMask ground;
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private float jumpForce = 10f;
+
+
 
     private void Start()
     {
@@ -23,36 +19,40 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         coll = GetComponent<Collider2D>();
     }
+
     private void Update()
-    {
-        Movement();
-        AnimationState();
-        anim.SetInteger("state", (int)state); //sets animation based on Enumerator state
-    }
-    private void Movement()
     {
         float hDirection = Input.GetAxis("Horizontal");
 
-        //Moving left
         if (hDirection < 0)
         {
-            rb.velocity = new Vector2(-speed, rb.velocity.y);
+            rb.velocity = new Vector2(-5, rb.velocity.y);
             transform.localScale = new Vector2(-1, 1);
         }
-        //Moving right
+
         else if (hDirection > 0)
         {
-            rb.velocity = new Vector2(speed, rb.velocity.y);
+            rb.velocity = new Vector2(5, rb.velocity.y);
             transform.localScale = new Vector2(1, 1);
         }
-        //Jumping
-        if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers())
+
+        else
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+
+        }
+
+        if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 10f);
             state = State.jumping;
         }
+
+        velocityState();
+        anim.SetInteger("state", (int)state);
+
     }
-    private void AnimationState()
+
+    private void velocityState()
     {
         if (state == State.jumping)
         {
@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (state == State.falling)
         {
-            if (coll.IsTouchingLayers(ground))
+            if(coll.IsTouchingLayers(ground))
             {
                 state = State.idle;
             }
