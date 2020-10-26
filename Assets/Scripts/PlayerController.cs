@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     //Start() variables
@@ -21,13 +22,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Text cherryText;
     [SerializeField] private float hurtForce = 10f;
 
-    private void Start()
+    //HealthBar
+    public int maxHealth = 100; //69
+    public int currentHealth;   //69
+
+    public HealthBar healthBar; //69
+
+
+
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         coll = GetComponent<Collider2D>();
+        currentHealth = maxHealth;  //69
+        healthBar.SetMaxHealth(maxHealth);   //69
+
     }
-    private void Update()
+    void Update()
     {
         if (state != State.hurt)
         {
@@ -35,6 +47,11 @@ public class PlayerController : MonoBehaviour
         }
         AnimationState();
         anim.SetInteger("state", (int)state); //sets animation based on Enumerator state
+
+        if (currentHealth == 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision) //Trigger for Collectables
     {
@@ -51,7 +68,7 @@ public class PlayerController : MonoBehaviour
         {
             Enemy enemy = other.gameObject.GetComponent<Enemy>();
             if (state == State.falling)
-            { 
+            {
                 enemy.JumpedOn();
                 Jump();
             }
@@ -62,16 +79,27 @@ public class PlayerController : MonoBehaviour
                 {
                     //Enemy is to my right therefore should be damaged and move left
                     rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
+                    TakeDamage(20);
+
                 }
                 else
                 {
                     //Enemy is to my left therefore i Should be damaged and move right
                     rb.velocity = new Vector2(hurtForce, rb.velocity.y);
+                    TakeDamage(20);
                 }
             }
 
         }
     }
+
+    void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        healthBar.SetHealth(currentHealth);
+    }
+
+
     private void Movement()
     {
         float hDirection = Input.GetAxis("Horizontal");
@@ -134,3 +162,4 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
+
