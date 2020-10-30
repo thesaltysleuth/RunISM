@@ -61,6 +61,9 @@ TagManager:
   - name: buildings
     uniqueID: 81034957
     locked: 0
+  - name: bushesbehindtrees
+    uniqueID: 2137022985
+    locked: 0
   - name: trees
     uniqueID: 2327422081
     locked: 0
