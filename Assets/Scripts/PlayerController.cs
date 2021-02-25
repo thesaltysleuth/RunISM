@@ -3,12 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+
+
 public class PlayerController : MonoBehaviour
 {
+
+    static int assignments=0;
+    static int totalenemies=0;
+    static float totaltime=0.0f;
+    
+    static float timestart=0;
+    static int enemystart=0;
+    static int assignmentstart=0;
+
+    public int displayassignments=0;
+    public int displayenemies=0;
+    public int displaytime=0;
+
     //Start() variables
     private Rigidbody2D rb;
     private Animator anim;
     private Collider2D coll;
+
+    private AudioSource footsteps;
 
     //FSM
     private enum State { idle, running, jumping, falling, hurt }
@@ -28,19 +45,25 @@ public class PlayerController : MonoBehaviour
 
     public HealthBar healthBar; //69
 
-
+    [SerializeField]public int damageamt=20;
 
     void Start()
     {
+        timestart=totaltime;
+        enemystart=totalenemies;
+        assignmentstart=assignments;
+
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         coll = GetComponent<Collider2D>();
         currentHealth = maxHealth;  //69
         healthBar.SetMaxHealth(maxHealth);   //69
+        footsteps=GetComponent<AudioSource>();
 
     }
     void Update()
     {
+        totaltime += Time.deltaTime;
         if (state != State.hurt)
         {
             Movement();
@@ -48,10 +71,20 @@ public class PlayerController : MonoBehaviour
         AnimationState();
         anim.SetInteger("state", (int)state); //sets animation based on Enumerator state
 
-        if (currentHealth == 0)
+        if (currentHealth <= 0)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            //totaltime=timestart;
+            //totalenemies=enemystart;
+            //assignments=assignmentstart;
         }
+    }
+
+    public void EndResult(){
+
+        displayassignments = assignments;
+        displaytime = (int)totaltime % 60;
+        displayenemies = totalenemies;
     }
     private void OnTriggerEnter2D(Collider2D collision) //Trigger for Collectables
     {
@@ -60,6 +93,7 @@ public class PlayerController : MonoBehaviour
             Destroy(collision.gameObject); //Cherry destroy
             cherries += 1;
             cherryText.text = cherries.ToString(); //Converting number to string
+            assignments++;
         }
     }
     private void OnCollisionEnter2D(Collision2D other)
@@ -70,7 +104,8 @@ public class PlayerController : MonoBehaviour
             if (state == State.falling)
             {
                 enemy.JumpedOn();
-                Jump();
+                Jump2();
+                totalenemies++;
             }
             else
             {
@@ -79,24 +114,75 @@ public class PlayerController : MonoBehaviour
                 {
                     //Enemy is to my right therefore should be damaged and move left
                     rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
-                    TakeDamage(20);
+                    TakeDamage(damageamt);
 
                 }
                 else
                 {
                     //Enemy is to my left therefore i Should be damaged and move right
                     rb.velocity = new Vector2(hurtForce, rb.velocity.y);
-                    TakeDamage(20);
+                    TakeDamage(damageamt);
                 }
             }
 
         }
+
+
+         if (other.gameObject.tag == "Boss")
+        {
+            Boss boss = other.gameObject.GetComponent<Boss>();
+            if (state == State.falling)
+            {
+                boss.JumpedOn();
+                Jump2();
+                if (other.gameObject.transform.position.x > transform.position.x)
+                {
+                    //Enemy is to my right therefore should be damaged and move left
+                    rb.velocity = new Vector2(hurtForce, rb.velocity.y);
+
+                }
+                else
+                {
+                    //Enemy is to my left therefore i Should be damaged and move right
+                    rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
+                }
+            }
+            else
+            {
+                state = State.hurt;
+                if (other.gameObject.transform.position.x > transform.position.x)
+                {
+                    //Enemy is to my right therefore should be damaged and move left
+                    rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
+                    TakeDamage(damageamt);
+
+                }
+                else
+                {
+                    //Enemy is to my left therefore i Should be damaged and move right
+                    rb.velocity = new Vector2(hurtForce, rb.velocity.y);
+                    TakeDamage(damageamt);
+                }
+            }
+
+        }
+
+        if (other.gameObject.tag == "Life"){
+            currentHealth = maxHealth;
+            healthBar.SetHealth(currentHealth);
+            Destroy(other.gameObject);
+        }
     }
 
-    void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         currentHealth -= damage;
         healthBar.SetHealth(currentHealth);
+    }
+
+    public void hurtAnimation(){
+        state=State.hurt;
+        rb.velocity = new Vector2(-hurtForce, rb.velocity.y);
     }
 
 
@@ -117,15 +203,25 @@ public class PlayerController : MonoBehaviour
             transform.localScale = new Vector2(1, 1);
         }
         //Jumping
-        if (Input.GetButtonDown("Jump") && coll.IsTouchingLayers(ground))
+        if (Input.GetButtonDown("Jump"))
         {
             Jump();
         }
     }
-    private void Jump()
+
+    public void Jump()
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        state = State.jumping;
+        if(coll.IsTouchingLayers(ground)){
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            state = State.jumping;  
+        } 
+    }
+
+    public void Jump2()
+    {
+        
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            state = State.jumping;  
     }
     private void AnimationState()
     {
@@ -160,6 +256,10 @@ public class PlayerController : MonoBehaviour
         {
             state = State.idle;
         }
+    }
+
+    private void Footstep(){
+        footsteps.Play();
     }
 }
 

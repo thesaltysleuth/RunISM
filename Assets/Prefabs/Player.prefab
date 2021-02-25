@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6286570112689216657}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,6 +49,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -60,6 +61,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -70,7 +72,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 685478721
-  m_SortingLayer: 8
+  m_SortingLayer: 10
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b96cdb5f1039ca64bb6c3f19f9484f8e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -142,12 +144,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3b8356f92c80b948941f2eb814b5fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cherries: 0
   ground:
     serializedVersion: 2
     m_Bits: 256
   speed: 7
   jumpForce: 15
+  cherries: 0
+  cherryText: {fileID: 0}
+  hurtForce: 10
+  maxHealth: 100
+  currentHealth: 0
+  healthBar: {fileID: 0}
+  damageamt: 20
 --- !u!95 &6286570112689216657
 Animator:
   serializedVersion: 3

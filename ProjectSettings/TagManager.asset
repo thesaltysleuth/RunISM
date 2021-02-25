@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Collectable
   - Enemy
+  - Boss
+  - Life
   layers:
   - Default
   - TransparentFX
@@ -67,9 +69,12 @@ TagManager:
   - name: trees
     uniqueID: 2327422081
     locked: 0
+  - name: ground
+    uniqueID: 2995183485
+    locked: 0
   - name: Entity
     uniqueID: 685478721
     locked: 0
-  - name: ground
-    uniqueID: 2995183485
+  - name: UI
+    uniqueID: 2136274667
     locked: 0

@@ -17,4 +17,15 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
+    public void LoadMainScene(){
+         SceneManager.LoadScene("Menu");
+    }
+
+     public void LoadHelpScene(){
+         SceneManager.LoadScene("HowToPlay");
+    }
+
+     public void LoadCreditScene(){
+         SceneManager.LoadScene("Credits");
+    }
 }
